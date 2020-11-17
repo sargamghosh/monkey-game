@@ -10,7 +10,7 @@ function preload(){
   monkey_running =            loadAnimation("sprite_0.png","sprite_1.png","sprite_2.png","sprite_3.png","sprite_4.png","sprite_5.png","sprite_6.png","sprite_7.png","sprite_8.png")
   
   bananaImage = loadImage("banana.png");
-  obstaceImage = loadImage("obstacle.png");
+  obstacleImage = loadImage("obstacle.png");
  
 }
 
@@ -26,7 +26,7 @@ function setup() {
   ground.velocityX = -4;
   
   FoodGroup = new Group();
-  obstaclesGroup = new Group();
+  obstacleGroup = new Group();
   
   survival = 0;
   
@@ -43,7 +43,18 @@ function draw() {
     monkey.velocityY = -12; 
   }
   monkey.velocityY = monkey.velocityY+0.8;
+    
   monkey.collide(ground);
+  
+  if(obstacleGroup.isTouching(monkey)) {
+    monkey.velocityY = 0;
+    ground.velocityX = 0;
+    obstacleGroup.setVelocityXEach(0);
+    FoodGroup.setVelocityXEach(0);
+    obstacleGroup.setLifetimeEach(-1);
+    FoodGroup.setLifetimeEach(-1);
+    
+  }
   
   spawnFood();
   spawnObstacles();
@@ -55,11 +66,29 @@ function draw() {
 }
 
 function spawnFood() {
-  
+  if(World.frameCount%80===0) {
+    banana = createSprite(800,180,10,10);
+    banana.y = Math.round(random(120,200));
+    banana.addImage(bananaImage);
+    banana.scale = 0.05;
+    banana.velocityX = -3;
+    
+    banana.lifetime = 300;
+    
+    FoodGroup.add(banana);
+  }
 }
 
 function spawnObstacles() {
-  
+ if(World.frameCount % 300 === 0) {
+   obstacle = createSprite(800,340,10,40);
+   obstacle.addImage(obstacleImage);
+   obstacle.scale = 0.15;
+   obstacle.velocityX = -3;
+   obstacle.lifetime = 300;
+   
+   obstacleGroup.add(obstacle);
+ } 
 }
 
 
